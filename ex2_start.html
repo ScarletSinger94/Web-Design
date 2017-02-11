@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ex2 Start</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap() {
+        var centerPos = {lat: 40.5053128, lng: -74.4531979};
+        var marker1Pos = {lat: 40.5053128, lng: -74.4531979};
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: centerPos,
+          zoom: 18,
+          mapTypeId: google.maps.MapTypeId.HYBRID,
+          draggable: false,
+          scrollwheel: false,
+        });
+        var marker1 = new google.maps.Marker({
+          position: marker1Pos,
+          map: map,
+          title: 'Hello World!'
+        });
+        var contentString = 'Hello World';
+        var infowindow1 = new google.maps.InfoWindow({
+          content: contentString
+        });
+        marker1.addListener('click', function() {
+          infowindow1.open(map, marker1);
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkGXKqryRAntACFGym5tBgcd06J1qefRk&callback=initMap"
+    async defer></script>
+  </body>
+</html>

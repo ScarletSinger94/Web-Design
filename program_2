@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ex2 Start</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta charset="utf-8">
+  <style>
+  /* Always set the map height explicitly to define the size of the div
+  * element that contains the map. */
+  #map1 {
+    height: 400px;
+    width: 800px;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .category{
+    float: left;
+    margin-right: 50px;
+  }
+  </style>
+</head>
+<body>
+  <div class="">
+    <form class="" >
+      <input type="radio" name="info" value="true">Yes<br>
+      <input type="radio" name="info" value="false">No<br>
+    </form>
+  </div>
+  <div id="map1"></div>
+  <script>
+  // location name, category, short info, address, lat, lng, map to use//
+  var locObj1 = { Locname: "SCI",
+  category: "Academic",
+  shortinfo: "SCI is a building on the Rutgers Campus where cool people exist",
+  address: "4 Huntington Street, New Brunswick, NJ",
+  position: {lat:0,lng:0},
+  mapToUse: "map1"
+};
+var locObj2 = { Locname: "Rutgers Club",
+category : "Restaurant",
+shortinfo : "Rutgers Club, where you go when you mean something",
+address: "199 College Ave, New Brunswick, NJ",
+position: {lat:0,lng:0},
+mapToUse: "map1"
+};
+var locArray = [ locObj1,locObj2];
+var map1;
+var geocoder;
+var icons;
+function initMap() {
+  var centerPos = {lat: 40.5053128, lng: -74.4531979};
+  var marker1Pos = {lat: 40.5053128, lng: -74.4531979};
+  map1 = new google.maps.Map(document.getElementById('map1'), {
+    center: centerPos,
+    zoom: 18,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
+    draggable: true,
+    scrollwheel: false,
+    minZoom:18,
+    maxZoom:18,
+  });
+  // var marker1 = new google.maps.Marker({
+  //   position: marker1Pos,
+  //   map: map1,
+  //   title: 'Hello World!'
+  // });
+  // var contentString = 'Hello World';
+  // marker1.addListener('click', function() {
+  //   infowindow1.open(map1, marker1);
+  // });
+  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+  icons = {
+    Restaurant: {
+      icon: iconBase + 'parking_lot_maps.png'
+    },
+    Academic: {
+      icon: iconBase + 'library_maps.png'
+    },
+    info: {
+      icon: iconBase + 'info-i_maps.png'
+    }
+  };
+  geocoder = new google.maps.Geocoder();
+  for (var i=0; i < locArray.length; i++){
+    codeAddressPlaceMarker(i);
+  }
+
+}
+function codeAddressPlaceMarker(locIndex) {
+  //var address = document.getElementById('address').value;//
+  var curObj = locArray[locIndex];
+  var address = curObj.address;
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == 'OK') {
+      curObj.position = results[0].geometry.location;
+      console.log("assign geocode " + curObj.position.toString());
+      var marker = new google.maps.Marker({
+        icon: icons[curObj.category].icon,
+        map: map1,
+        position: curObj.position
+      });
+      var h2string = "<h2>" + curObj.Locname + "</h2>";
+      var p1string = "<p class='category'>" + curObj.category + "</p>";
+      var p2string = "<p2>" + curObj.shortinfo + "</p2>";
+      var contentString = 'Hello World';
+      var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        width: 400
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map1, marker);
+      });
+    }
+  });
+};
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwccNJ2KGUEVZlTi-WAavUYxYBzXZ1l18&callback=initMap"
+async defer></script>
+</body>
+</html>
